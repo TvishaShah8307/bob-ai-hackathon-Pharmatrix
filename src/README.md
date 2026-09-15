@@ -1,47 +1,17 @@
-# Source Code
+# src/ layout
 
-Place all your project's source code in this folder.
+- `data_generator.py` — generates synthetic fleet data (assets, sensor readings,
+  service records) into `data/`. Run this once before starting the app.
+- `predictor.py` — core logic: readiness scoring, trend-based failure prediction,
+  explanation generation, and fleet-wide maintenance plan ranking. No UI code here —
+  keep this module UI-agnostic so it's testable and reusable.
+- `app.py` — Streamlit dashboard. Imports `predictor.py`, loads `data/*.csv`, and
+  renders the fleet view, asset drill-down, and maintenance plan.
+- `data/` — generated CSVs (`assets.csv`, `sensor_readings.csv`,
+  `service_records.csv`). Not meant to be hand-edited; regenerate with
+  `python data_generator.py`.
+- `.env.example` — template for any config/secrets if you extend the app beyond local
+  CSV data.
 
-## Structure Guidelines
-
-Organize your code logically. Here are common patterns — use whatever fits
-your project:
-
-### Web Application
-```
-src/
-  backend/        ← API server code
-  frontend/       ← UI code
-  shared/         ← Shared utilities/types
-```
-
-### Data / AI Project
-```
-src/
-  data/           ← Data ingestion / preprocessing
-  models/         ← ML model code
-  api/            ← Serving layer
-  notebooks/      ← Jupyter notebooks (exploration)
-```
-
-### CLI / Script-based Tool
-```
-src/
-  cli/            ← CLI entry points
-  lib/            ← Core logic
-  utils/          ← Helpers
-```
-
-## Important Files to Include
-
-- `requirements.txt` or `package.json` — dependency manifest
-- `.env.example` — template for environment variables (NEVER commit `.env`)
-- Any database migration files
-- Configuration files
-
-## What NOT to Include in src/
-
-- `.env` files with real secrets
-- Large binary files (use Git LFS or link externally)
-- `node_modules/` or `venv/` (these are in `.gitignore`)
-- Build artifacts (`dist/`, `build/`, `__pycache__/`)
+Run order: `pip install -r requirements.txt` → `python data_generator.py` →
+`streamlit run app.py`.
