@@ -1,79 +1,55 @@
 # Setup Guide
 
-> **This file is read by the automated evaluation pipeline. Be precise and complete.**
+Follow these steps exactly on a clean machine / fresh terminal — this is what judges
+will do to verify the project runs.
 
 ## Prerequisites
+- Python 3.9 or later
+- `pip`
+- No accounts, API keys, or external services are required — the hackathon build runs
+  entirely on local synthetic data.
 
-Before you begin, ensure you have the following installed:
+## Environment variables
+None are required to run the demo. `src/.env.example` lists optional variables only
+needed if you extend the app to a real data source (see comments in that file).
 
-- [ ] [e.g., Python 3.11+]
-- [ ] [e.g., Node.js 18+]
-- [ ] [e.g., Docker Desktop]
-- [ ] [e.g., An IBM Cloud account with watsonx.ai access]
-
-## Environment Variables
-
-Copy `.env.example` to `.env` and fill in the values:
-
+## Install
 ```bash
-cp .env.example .env
+cd src
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-| Variable | Description | Required |
-|---|---|---|
-| `WATSONX_API_KEY` | Your IBM watsonx.ai API key | Yes |
-| `WATSONX_PROJECT_ID` | Your watsonx.ai project ID | Yes |
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `SLACK_WEBHOOK_URL` | Slack webhook for alerts | No |
-
-## Installation
-
+## Generate sample data
 ```bash
-# 1. Clone the repository
-git clone https://github.com/[your-org]/[your-repo].git
-cd [your-repo]
-
-# 2. Install backend dependencies
-[your command — e.g.: pip install -r requirements.txt]
-
-# 3. Install frontend dependencies (if applicable)
-[your command — e.g.: cd frontend && npm install]
-
-# 4. Set up the database (if applicable)
-[your command — e.g.: python manage.py migrate]
+python data_generator.py
 ```
+This creates `src/data/assets.csv`, `src/data/sensor_readings.csv`, and
+`src/data/service_records.csv` — a synthetic fleet of 15 assets with realistic HUMS
+sensor histories (some intentionally degrading, to demonstrate the prediction feature).
 
-## Running the Application
-
+## Run
 ```bash
-# Start the backend
-[your command — e.g.: uvicorn app.main:app --reload]
-
-# Start the frontend (in a separate terminal, if applicable)
-[your command — e.g.: cd frontend && npm run dev]
+streamlit run app.py
 ```
+Streamlit will print a local URL (typically `http://localhost:8501`) — open it in a
+browser.
 
-The application will be available at: `http://localhost:[PORT]`
-
-## Running Tests
-
-```bash
-[your test command — e.g.: pytest tests/ -v]
-```
-
-## Quick Demo (Optional)
-
-If you have a demo script or sample data to showcase the project quickly:
-
-```bash
-[e.g.: python demo/seed_demo_data.py]
-[e.g.: open http://localhost:8000/demo]
-```
+## How to verify it's working
+1. The Fleet Readiness table loads with 15 assets, each showing a Ready / At Risk /
+   Not Ready status.
+2. Selecting an asset in "Asset Detail" shows its components; expanding a flagged
+   component shows a plain-language explanation and a sensor trend chart.
+3. The "Prioritised Maintenance Plan" table at the bottom lists every flagged
+   component fleet-wide, ranked by priority, and can be downloaded as CSV.
 
 ## Troubleshooting
 
-| Issue | Solution |
+| Problem | Fix |
 |---|---|
-| [e.g., `ModuleNotFoundError`] | [e.g., Run `pip install -r requirements.txt` again] |
-| [e.g., Database connection refused] | [e.g., Ensure PostgreSQL is running: `docker compose up db`] |
-| [e.g., watsonx.ai 401 error] | [e.g., Check `WATSONX_API_KEY` in your `.env` file] |
+| `ModuleNotFoundError: No module named 'streamlit'` | Run `pip install -r requirements.txt` inside `src/` (and make sure your virtualenv is activated) |
+| App loads but shows "No data found" | Run `python data_generator.py` from inside `src/` first, then rerun `streamlit run app.py` |
+| `streamlit: command not found` | Use `python -m streamlit run app.py` instead, or ensure the venv's `bin`/`Scripts` folder is on your PATH |
+| Port 8501 already in use | Run `streamlit run app.py --server.port 8502` |
+| Charts look empty for an asset | That asset/component may have a flat (non-degrading) trend by design — try a different asset from the Fleet Readiness table with an "At Risk" or "Not Ready" status |
