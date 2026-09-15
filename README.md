@@ -4,7 +4,7 @@
 - **Team name:** Pharmatrix
 - **Track:** AI
 - **Lead:** Tvisha Shah (24bph100@charusat.edu.in)
-- **Members:** Patel Vaidehi Amishkumar (24bph077@charusat.edu.in), Patel Shiyaben Nimeshbhai (24bph072@charusat.edu.in), Shah Kripi Nikhil (24bph100@charusat.edu.in)
+- **Members:** Patel Vaidehi Amishkumar (24bph077@charusat.edu.in), Patel Shiyaben Nimeshbhai (24bph072@charusat.edu.in), Shah Kripi Nikhil (24bph096@charusat.edu.in)
 
 ## Problem Statement
 Military organisations cannot reliably determine whether aircraft, vehicles, and equipment
